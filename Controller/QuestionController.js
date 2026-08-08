@@ -1,4 +1,4 @@
-const Question = require("../model/Question");
+const Question = require("../Model/Question");
 
 const getAllQuestion = async(req,res)=>{
     try{
