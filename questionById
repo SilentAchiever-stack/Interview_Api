@@ -1,0 +1,43 @@
+o this get by id since am using postman i will need the mongodb question id which is objectId but what if i am using normal frontend we can use something like just clicking the question and it will give us  the answer
+
+Exactly right — in a real frontend, the user won't be typing MongoDB ObjectIds into a URL bar. Here's how it actually works in practice:
+
+How it works with a real frontend
+List page: You call GET /app/questions (your existing getAllQuestion route), which returns all questions — each one already includes its _id.
+Frontend renders a list, something like:
+jsx
+{questions.map(q => (
+  <div key={q._id} onClick={() => navigate(`/question/${q._id}`)}>
+    {q.question}
+  </div>
+))}
+The _id is already sitting in the data you fetched — the frontend just uses it silently in the background. The user just sees the question text and clicks it; they never see or type the ObjectId themselves.
+
+Clicking navigates to a detail page/route like /question/6a52b0a527cbdd3fd16ecbed, and your frontend then calls:
+GET /app/questions/6a52b0a527cbdd3fd16ecbed
+using the _id it already had from step 1.
+
+So in Postman, when you're testing manually
+You're just doing step 3 by hand — copying an _id from the list response and pasting it into the URL, because you don't have a frontend yet to do that click-and-navigate step for you. That's completely normal at this stage of backend development.
+
+Do you have a getQuestionById route yet?
+If not, want me to help you write it? Something like:
+
+js
+const getQuestionById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const question = await Question.findById(id);
+    if (!question) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+    return res.status(200).json({ data: question });
+  } catch (error) {
+    return res.status(500).json({ message: 'Something went wrong', data: error.message });
+  }
+};
+With the route:
+
+js
+router.get('/questions/:id', getQuestionById);
+Want me to also show how the answer would be hidden until clicked (like a flashcard/quiz style reveal), or are you just doing straightforward question+answer display for now?

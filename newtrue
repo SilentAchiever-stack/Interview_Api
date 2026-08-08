@@ -1,0 +1,121 @@
+That's just a deprecation warning, not an error — your app still works fine, but Mongoose is telling you the { new: true } option syntax is old and will eventually be removed in a future version.
+
+Where this is coming from
+
+Likely in your UpDateQuestion or ReplaceQuestion controller:
+
+js
+const updateQuestion = await Question.findByIdAndUpdate(
+    id,
+    req.body,
+    { new: true, runValidators: true }  // <-- "new" triggers this warning
+);
+Fix — update to the new syntax
+
+Replace new: true with returnDocument: 'after':
+
+js
+const updateQuestion = await Question.findByIdAndUpdate(
+    id,
+    req.body,
+    { returnDocument: 'after', runValidators: true }
+);
+Do this everywhere you use { new: true }
+
+Search your codebase for new: true — you probably have this in a few places:
+
+UpDateQuestion
+ReplaceQuestion (if using findByIdAndUpdate/findOneAndReplace)
+Anywhere else using findOneAndUpdate/findByIdAndUpdate/findOneAndReplace
+
+Just swap new: true → returnDocument: 'after' in each spot. Functionally identical — same behavior of returning the updated document instead of the original — just newer syntax that won't trigger the warning.
+
+Not urgent to fix immediately (nothing breaks), but good to clean up before Mongoose eventually removes the old option entirely in a future major version.
+
+what does it mean
+
+Let me break it down simply.
+
+What findByIdAndUpdate normally does
+
+By default, when you update a document in MongoDB, it hands you back the old version — the one before your changes were applied. That's often not what you want, since you usually want to see the updated result.
+
+What { new: true } does
+
+Adding { new: true } tells Mongoose: "Don't give me the old document — give me the updated one instead."
+
+So without it:
+
+js
+const result = await Question.findByIdAndUpdate(id, { answer: "new answer" });
+console.log(result.answer); // shows the OLD answer, before the update
+
+With { new: true }:
+
+js
+const result = await Question.findByIdAndUpdate(id, { answer: "new answer" }, { new: true });
+console.log(result.answer); // shows the NEW answer
+Why the warning?
+
+Mongoose is saying: "The way you wrote new: true still works for now, but we're changing the name of this option — please write it differently going forward." It's like a company saying "we're renaming this button, please start using the new name" — the button still works today, it's just old-fashioned by their new standard, and they're getting rid of it eventually.
+
+Why the new name?
+
+They chose returnDocument: 'after' because it's clearer:
+
+returnDocument: 'before' → give me the document as it was before the update (this is the default behavior)
+returnDocument: 'after' → give me the document as it is after the update (same as old new: true)
+Bottom line
+
+You don't need to panic — your code works exactly the same either way right now. It's just a heads-up that in a future version of Mongoose, new: true might stop working entirely, and they want you to start using returnDocument: 'after' instead so your code doesn't break later.
+
+
+
+runValidator
+runValidators: true
+Good question — this one's about data validation, separate from the new/returnDocument thing.
+
+What it does
+When you create a new document with Mongoose (like Student.create({...})), your schema's validation rules automatically run — things like:
+
+js
+email: {
+  type: String,
+  required: true,   // <-- validation rule
+  unique: true
+}
+If you tried to create a student without an email, Mongoose would block it and throw a validation error.
+
+But — by default, Mongoose does NOT run these same validation rules when you update a document using findByIdAndUpdate or findOneAndUpdate. This is a quirky, old Mongoose behavior — updates skip validation unless you explicitly turn it back on.
+
+Why that matters
+Without runValidators: true, someone could send this to your update route:
+
+json
+{ "difficulty": "impossible" }
+Even if your schema says:
+
+js
+difficulty: {
+  type: String,
+  enum: ['beginner', 'intermediate', 'advanced']  // only these 3 allowed
+}
+...the update would succeed anyway and save "impossible" into the database, silently breaking your data integrity — because validation was skipped.
+
+What runValidators: true does
+It tells Mongoose: "Please actually check my schema's validation rules (required fields, enums, min/max, custom validators, etc.) even though this is an update, not a create."
+
+So with it:
+
+js
+const updateQuestion = await Question.findByIdAndUpdate(
+    id,
+    req.body,
+    { returnDocument: 'after', runValidators: true }  // <-- validation now runs
+);
+If someone tries to update difficulty to an invalid value like "impossible", Mongoose will now reject it and throw a validation error, just like it would on creation.
+
+Bottom line
+You already have this set correctly in your code — good practice. It's just protecting your update routes from accepting invalid data that breaks your schema's rules.
+
+
