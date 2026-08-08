@@ -1,4 +1,4 @@
-const Payment = require('../model/PaymentSchema');
+/* const Payment = require('../model/PaymentSchema');
 const Order = require('../model/orderSchema');
 const {StripeVerification, payStackVerification} = require('../Utils/paymentVerification')
 
@@ -202,4 +202,4 @@ exports.handlePayStackWebhook = async (req, res) => {
   } catch (err) {
     console.error(`Error processing Paystack event ${event.type}:`, err);
   }
-};
+}; */
