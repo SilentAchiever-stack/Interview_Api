@@ -1,4 +1,4 @@
-const Student = require('../Model/studentModel');
+const Student = require('../Model/StudentModel');
 const Admin = require('../Model/Admin'); 
 const JWT = require('jsonwebtoken');
 const{SendOtpToMail,SendTokenToMail} = require('../Utils/emailTransporter');
