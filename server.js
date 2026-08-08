@@ -7,7 +7,7 @@ const cors = require('cors');
 const Router = require('./Route/generalRoute');
 //const googleRoute = require('./Route/googleRouter'); 
 //const paymentRoute = require('./Route/paymentRoute');
-const ConnectDBs = require('./DataBase/database');
+const ConnectDBs = require('./Database/database');
 
 ConnectDBs();
 
