@@ -33,7 +33,7 @@ const landingPage = `
   </head>
   <body>
     <div class="card">
-      <h1>Interview Prep API</h1>
+      <h1>Interview API</h1>
       <p>Server is running</p>
     </div>
   </body>
