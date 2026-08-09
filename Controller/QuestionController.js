@@ -122,8 +122,8 @@ const ReplaceQuestion = async(req,res)=>{
 
 const DeleteQuestion = async(req,res)=>{
     try{
-    const {id} = req.params.id;
-    const deleteBookById = await Question.findByIdAndDelete({id});
+    const {id} = req.params;                         
+const deleteBookById = await Question.findByIdAndDelete(id);  
     if(!deleteBookById){
         return res.json({
             message:'this book does not exist'
