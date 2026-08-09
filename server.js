@@ -14,8 +14,9 @@ ConnectDBs();
 
 app.use(cors({origin:true,
   credentials:true,
-  methods:["GET","PUT","PATCH","POST","DELETE"],
-  allowedHeaders:['content-type','Authorization']
+  methods:["GET","PUT","PATCH","POST","DELETE"
+  ],
+  allowedHeaders:['content-type']
 }))
 
 app.use(express.json());
