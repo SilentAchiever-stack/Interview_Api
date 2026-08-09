@@ -2,7 +2,7 @@ const landingPage = `
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Interview Prep API</title>
+    <title>Interview API</title>
     <style>
       body {
         background-color: #0B0B0B;
@@ -33,7 +33,7 @@ const landingPage = `
   </head>
   <body>
     <div class="card">
-      <h1>Interview Prep API</h1>
+      <h1>Interview API</h1>
       <p>Server is running</p>
     </div>
   </body>
