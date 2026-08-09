@@ -21,6 +21,9 @@ app.use(express.json());
 app.use(cookieParser());
 //app.use(passport.initialize()); 
 //app.use('/webhooks', express.raw({ type: 'application/json' }), webhookRoutes);
+app.get('/', (req, res) => {
+  res.json({ message: 'Interview Prep API is running' });
+});
 
 app.use('/api', Router);
 //app.use('/app', googleRoute); 
