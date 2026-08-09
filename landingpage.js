@@ -2,7 +2,7 @@ const landingPage = `
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Interview Prep API</title>
+    <title>Interview API</title>
     <style>
       body {
         background-color: #0B0B0B;
