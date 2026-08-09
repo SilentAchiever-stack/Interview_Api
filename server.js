@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
 const Router = require('./Route/generalRoute');
+const landingPage = require('./landing');
 //const googleRoute = require('./Route/googleRouter'); 
 //const paymentRoute = require('./Route/paymentRoute');
 const ConnectDBs = require('./Database/database');
@@ -22,9 +23,8 @@ app.use(cookieParser());
 //app.use(passport.initialize()); 
 //app.use('/webhooks', express.raw({ type: 'application/json' }), webhookRoutes);
 app.get('/', (req, res) => {
-  res.send( 'Interview Prep API is running' );
+  res.send(landingPage);
 });
-
 app.use('/api', Router);
 //app.use('/app', googleRoute); 
 //app.use('/pay', paymentRoute);
